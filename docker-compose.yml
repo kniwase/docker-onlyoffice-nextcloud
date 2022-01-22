@@ -31,6 +31,7 @@ services:
     volumes:
       - ./data/document_data:/var/www/onlyoffice/Data
       - ./data/document_log:/var/log/onlyoffice
+      - ./core-fonts:/var/www/onlyoffice/documentserver/core-fonts:ro
   nginx:
     container_name: nginx-server
     image: nginx
