@@ -37,7 +37,7 @@ services:
       - ./core-fonts:/var/www/onlyoffice/documentserver/core-fonts:ro
   nginx:
     container_name: nginx-server
-    image: nginx
+    image: nginx:stable
     restart: always
     ports:
       - 28081:80
