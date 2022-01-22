@@ -9,6 +9,9 @@ services:
       - '9000'
     volumes:
       - ./data/app_data:/var/www/html
+    depends_on:
+      - db
+      - onlyoffice-document-server
   db:
     container_name: nextcloud-db
     image: postgres:latest
@@ -42,6 +45,8 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./data/app_data:/var/www/html
+    depends_on:
+      - app
 volumes:
   document_data:
   document_log:
