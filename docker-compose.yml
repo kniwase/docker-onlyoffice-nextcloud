@@ -8,7 +8,22 @@ services:
       - '80'
       - '9000'
     volumes:
-      - app_data:/var/www/html
+      - ./data/app_data:/var/www/html
+    depends_on:
+      - db
+      - onlyoffice-document-server
+  db:
+    container_name: nextcloud-db
+    image: postgres:latest
+    restart: always
+    volumes:
+      - ./data/postgresql_data:/var/lib/postgresql/data
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=nextcloud
   onlyoffice-document-server:
     container_name: onlyoffice-document-server
     image: onlyoffice/documentserver:latest
@@ -17,20 +32,27 @@ services:
       - '80'
       - '443'
     volumes:
-      - document_data:/var/www/onlyoffice/Data
-      - document_log:/var/log/onlyoffice
+      - ./data/document_data:/var/www/onlyoffice/Data
+      - ./data/document_log:/var/log/onlyoffice
+      - ./core-fonts:/var/www/onlyoffice/documentserver/core-fonts:ro
   nginx:
     container_name: nginx-server
-    image: nginx
+    image: nginx:stable
     restart: always
     ports:
-      - 80:80
-      - 443:443
+      - 28081:80
+      - 28444:443
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - app_data:/var/www/html
+      - ./data/app_data:/var/www/html
+    depends_on:
+      - app
 volumes:
   document_data:
+    driver: local
   document_log:
+    driver: local
   app_data:
+    driver: local
   mysql_data:
+    driver: local
